@@ -10,4 +10,6 @@ window.onload = function() {
     layers: L.mapquest.tileLayer('map'),
     zoom: 12
   });
+
+  map.addControl(L.mapquest.control({position: 'bottomright'}));
 }
