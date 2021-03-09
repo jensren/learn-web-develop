@@ -1,27 +1,32 @@
-// 1. The basic part of the example
-var L;
+// Defining a baseURL and key to as part of the request URL
 
-window.onload = function() {
-  L.mapquest.key = 'zlmRB18q3VoZuCep0mNpDBBRN4DZXApX';
+const baseURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+const key = 'INSERT-YOUR-API-KEY-HERE';
+let url;
 
-  // 'map' refers to a <div> element with the ID map
-  var map = L.mapquest.map('map', {
-    center: [53.480759, -2.242631],
-    layers: L.mapquest.tileLayer('hybrid'),
-    zoom: 12
-  });
+// Grab references to all the DOM elements you'll need to manipulate
 
-  map.addControl(L.mapquest.control({position: 'bottomright'}));
+const searchTerm = document.querySelector('.search');
+const startDate = document.querySelector('.start-date');
+const endDate = document.querySelector('.end-date');
+const searchForm = document.querySelector('form');
 
-  L.marker([53.480759, -2.242631], {
-    icon: L.mapquest.icons.marker({
-      primaryColor: '#22407F',
-      secondaryColor: '#3B5998',
-      shadow: true,
-      size: 'md',
-      symbol: 'A'
-    })
-  })
-  .bindPopup('This is Manchester!')
-  .addTo(map);
-}
+// This is never used
+// const submitBtn = document.querySelector('.submit');
+
+const nextBtn = document.querySelector('.next');
+const previousBtn = document.querySelector('.prev');
+
+const section = document.querySelector('section');
+const nav = document.querySelector('nav');
+
+// Hide the "Previous"/"Next" navigation to begin with, as we don't need it immediately
+nav.style.display = 'none';
+
+// define the initial page number and status of the navigation being displayed
+let pageNumber = 0;
+
+// This is never used
+// let displayNav = false;
+
+// Event listeners to control the functionality
