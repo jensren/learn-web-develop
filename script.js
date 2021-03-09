@@ -9,15 +9,11 @@ verseChoose.onchange = function () {
 function updateDisplay(verse) {
   let url = `data/${verse.toLowerCase().replace(" ", "")}.txt`;
 
-  let request = new XMLHttpRequest();
-  request.open('GET', url);
-  request.responseType = 'text';
-
-  request.onload = () => {
-    poemDisplay.textContent = request.response;
-  };
-
-  request.send();
+  fetch(url).then((response) => {
+    response.text().then((text) => {
+      poemDisplay.textContent = text;
+    });
+  });
 }
 
 updateDisplay('Verse 1');
