@@ -12,7 +12,7 @@ function updateDisplay(verse) {
   fetch(url).then((response) => {
     return response.text()
   }).then((text) => {
-      poemDisplay.textContent = text;
+    poemDisplay.textContent = text;
   });
 }
 
