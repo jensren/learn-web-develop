@@ -5,9 +5,9 @@ window.onload = function() {
   L.mapquest.key = 'zlmRB18q3VoZuCep0mNpDBBRN4DZXApX';
 
   // 'map' refers to a <div> element with the ID map
-  var map = L.mapquest.map('hybrid', {
+  var map = L.mapquest.map('map', {
     center: [53.480759, -2.242631],
-    layers: L.mapquest.tileLayer('map'),
+    layers: L.mapquest.tileLayer('hybrid'),
     zoom: 12
   });
 
