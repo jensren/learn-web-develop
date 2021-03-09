@@ -185,6 +185,7 @@ function initialize() {
         console.log('Network request for "' + product.name + '" image failed with response ' + request.status + ': ' + request.statusText);
       }
     };
+    request.send();
   }
 
   // Display a product inside the <main> element
