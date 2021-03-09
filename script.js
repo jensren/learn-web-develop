@@ -10,9 +10,9 @@ function updateDisplay(verse) {
   let url = `data/${verse.toLowerCase().replace(" ", "")}.txt`;
 
   fetch(url).then((response) => {
-    response.text().then((text) => {
+    return response.text()
+  }).then((text) => {
       poemDisplay.textContent = text;
-    });
   });
 }
 
