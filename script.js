@@ -4,16 +4,29 @@ var products;
 // use fetch to retrieve it, and report any errors that occur in the fetch operation
 // once the products have been successfully loaded and formatted as a JSON object
 // using response.json(), run the initialize() function
-fetch('products.json').then(function(response) {
-  if(response.ok) {
-    response.json().then(function(json) {
-      products = json;
-      initialize();
-    });
+// fetch('products.json').then(function(response) {
+//   if(response.ok) {
+//     response.json().then(function(json) {
+//       products = json;
+//       initialize();
+//     });
+//   } else {
+//     console.log('Network request for products.json failed with response ' + response.status + ': ' + response.statusText);
+//   }
+// });
+
+let request = new XMLHttpRequest();
+request.open('GET', 'products.json');
+request.responseType = 'json';
+request.onload = () => {
+  if (request.readyState === 4) {
+    products = request.response;
+    initialize();
   } else {
-    console.log('Network request for products.json failed with response ' + response.status + ': ' + response.statusText);
+    console.log('Network request for products.json failed with response ' + request.status + ': ' + request.statusText);
   }
-});
+};
+request.send();
 
 // sets up the app logic, declares required variables, contains all the other functions
 function initialize() {
@@ -60,7 +73,7 @@ function initialize() {
     // if the category and search term are the same as they were the last time a
     // search was run, the results will be the same, so there is no point running
     // it again — just return out of the function
-    if(category.value === lastCategory && searchTerm.value.trim() === lastSearch) {
+    if (category.value === lastCategory && searchTerm.value.trim() === lastSearch) {
       return;
     } else {
       // update the record of last category and search term
@@ -68,21 +81,21 @@ function initialize() {
       lastSearch = searchTerm.value.trim();
       // In this case we want to select all products, then filter them by the search
       // term, so we just set categoryGroup to the entire JSON object, then run selectProducts()
-      if(category.value === 'All') {
+      if (category.value === 'All') {
         categoryGroup = products;
         selectProducts();
-      // If a specific category is chosen, we need to filter out the products not in that
-      // category, then put the remaining products inside categoryGroup, before running
-      // selectProducts()
+        // If a specific category is chosen, we need to filter out the products not in that
+        // category, then put the remaining products inside categoryGroup, before running
+        // selectProducts()
       } else {
         // the values in the <option> elements are uppercase, whereas the categories
         // store in the JSON (under "type") are lowercase. We therefore need to convert
         // to lower case before we do a comparison
         var lowerCaseType = category.value.toLowerCase();
-        for(var i = 0; i < products.length ; i++) {
+        for (var i = 0; i < products.length; i++) {
           // If a product's type property is the same as the chosen category, we want to
           // dispay it, so we push it onto the categoryGroup array
-          if(products[i].type === lowerCaseType) {
+          if (products[i].type === lowerCaseType) {
             categoryGroup.push(products[i]);
           }
         }
@@ -98,7 +111,7 @@ function initialize() {
   function selectProducts() {
     // If no search term has been entered, just make the finalGroup array equal to the categoryGroup
     // array — we don't want to filter the products further — then run updateDisplay().
-    if(searchTerm.value.trim() === '') {
+    if (searchTerm.value.trim() === '') {
       finalGroup = categoryGroup;
       updateDisplay();
     } else {
@@ -108,8 +121,8 @@ function initialize() {
       // For each product in categoryGroup, see if the search term is contained inside the product name
       // (if the indexOf() result doesn't return -1, it means it is) — if it is, then push the product
       // onto the finalGroup array
-      for(var i = 0; i < categoryGroup.length ; i++) {
-        if(categoryGroup[i].name.indexOf(lowerCaseSearchTerm) !== -1) {
+      for (var i = 0; i < categoryGroup.length; i++) {
+        if (categoryGroup[i].name.indexOf(lowerCaseSearchTerm) !== -1) {
           finalGroup.push(categoryGroup[i]);
         }
       }
@@ -128,13 +141,13 @@ function initialize() {
     }
 
     // if no products match the search term, display a "No results to display" message
-    if(finalGroup.length === 0) {
+    if (finalGroup.length === 0) {
       var para = document.createElement('p');
       para.textContent = 'No results to display!';
       main.appendChild(para);
-    // for each product we want to display, pass its product object to fetchBlob()
+      // for each product we want to display, pass its product object to fetchBlob()
     } else {
-      for(var i = 0; i < finalGroup.length; i++) {
+      for (var i = 0; i < finalGroup.length; i++) {
         fetchBlob(finalGroup[i]);
       }
     }
@@ -148,19 +161,30 @@ function initialize() {
     var url = 'images/' + product.image;
     // Use fetch to fetch the image, and convert the resulting response to a blob
     // Again, if any errors occur we report them in the console.
-    fetch(url).then(function(response) {
-      if(response.ok) {
-        response.blob().then(function(blob) {
-          // Convert the blob to an object URL — this is basically an temporary internal URL
-          // that points to an object stored inside the browser
-          var objectURL = URL.createObjectURL(blob);
-          // invoke showProduct
-          showProduct(objectURL, product);
-        });
+    // fetch(url).then(function (response) {
+    //   if (response.ok) {
+    //     response.blob().then(function (blob) {
+    //       // Convert the blob to an object URL — this is basically an temporary internal URL
+    //       // that points to an object stored inside the browser
+    //       var objectURL = URL.createObjectURL(blob);
+    //       // invoke showProduct
+    //       showProduct(objectURL, product);
+    //     });
+    //   } else {
+    //     console.log('Network request for "' + product.name + '" image failed with response ' + response.status + ': ' + response.statusText);
+    //   }
+    // });
+    let request = new XMLHttpRequest();
+    request.open('GET', url);
+    request.responseType = 'blob';
+    request.onload = () => {
+      if (request.readyState === 4) {
+        let objectURL = URL.createObjectURL(request.response);
+        showProduct(objectURL, product);
       } else {
-        console.log('Network request for "' + product.name + '" image failed with response ' + response.status + ': ' + response.statusText);
+        console.log('Network request for "' + product.name + '" image failed with response ' + request.status + ': ' + request.statusText);
       }
-    });
+    };
   }
 
   // Display a product inside the <main> element
