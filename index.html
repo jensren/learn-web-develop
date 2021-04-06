@@ -1,25 +1,37 @@
+
 <!DOCTYPE html>
-<html lang="en-US">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Javascript Exercises</title>
-  <link href='style.css' rel='stylesheet' type='text/css'>
-  <script defer src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
-  <script defer src="fetch.js"></script>
-  <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-  <![endif]-->
-  <script src='script.js' defer></script>
-</head>
+    <title>Fetch polyfill example</title>
 
-<body>
-  <h1>Fetch basic example</h1>
+    <link rel="stylesheet" href="">
+    <!--[if lt IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+    <![endif]-->
+  </head>
 
-  <img src="" class="my-image" alt="A flower">
-</body>
+  <body>
+    <h1>Fetch basic example</h1>
 
+    <img src="" class="my-image" alt="A flower">
+
+    <!-- Minified version of `es6-promise-auto` below. -->
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <script src="fetch.js"></script>
+    <script>
+      var myImage = document.querySelector('.my-image');
+
+      fetch('flowers.jpg').then(function(response) {
+        response.blob().then(function(myBlob) {
+          var objectURL = URL.createObjectURL(myBlob);
+          myImage.src = objectURL;
+        });
+      });
+    </script>
+  </body>
 </html>
